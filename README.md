@@ -8,7 +8,7 @@ This crate uses the `proc_macros_span` span, thus requiring a nightly compiler.
 # auto-registry in action
 
 Basic example use of `auto-registry`:
-```
+```rust
 pub trait Listener { ... }
 
 #[auto_registry::auto_registry(registry = "listeners")]
@@ -35,7 +35,7 @@ macro_rules! collect_listeners { // Collects to a Vec<Box<dyn Listener>>
 In this example, all registered types are mapped to expressions for the `collect_listeners` macro using `::default()`.
 
 You can also specify how each types gets mapped to an expression via the `mapper` attribute:
-```
+```rust
 pub trait Listener { ... }
 
 #[auto_registry::auto_registry(registry = "listeners")]
