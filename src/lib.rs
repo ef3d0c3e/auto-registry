@@ -249,12 +249,12 @@ impl Parse for GenerateRegistryArgs {
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct KeyboardListener {}
+/// pub struct KeyboardListener {}
 /// impl Listener for KeyboardListener {}
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct MouseListener {}
+/// pub struct MouseListener {}
 /// impl Listener for MouseListener {}
 ///
 /// macro_rules! collect_listeners { // Collects to a Vec<Box<dyn Listener>>
@@ -282,12 +282,12 @@ impl Parse for GenerateRegistryArgs {
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct KeyboardListener {}
+/// pub struct KeyboardListener {}
 /// impl Listener for KeyboardListener {}
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct MouseListener {}
+/// pub struct MouseListener {}
 /// impl Listener for MouseListener {}
 ///
 /// // Some global variable that will hold out registered listeners
