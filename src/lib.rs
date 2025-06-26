@@ -1,5 +1,4 @@
 #![feature(proc_macro_span)]
-use std::cell::RefCell;
 use std::sync::LazyLock;
 use std::sync::Mutex;
 use std::collections::HashMap;
@@ -10,7 +9,6 @@ use syn::parse::Parse;
 use syn::parse::ParseStream;
 use syn::parse_macro_input;
 use syn::ItemStruct;
-
 
 static REGISTRY: LazyLock<Mutex<HashMap<String, Vec<String>>>> = LazyLock::new(|| Mutex::new(HashMap::default()));
 
@@ -77,7 +75,7 @@ impl Parse for AutoRegistryArgs {
 ///
 /// ```
 /// #[auto_registry::auto_registry(registry = "listeners")]
-/// struct KeyboardListener { ... }
+/// struct KeyboardListener {}
 /// ```
 /// This will register `KeyboardListener` to the `listeners` registry.
 ///
@@ -247,13 +245,17 @@ impl Parse for GenerateRegistryArgs {
 ///
 /// Basic example
 /// ```
-/// #[auto_registry::auto_registry(registry = "listeners")]
-/// #[derive(Default)]
-/// struct KeyboardListener { ... }
+/// pub trait Listener {}
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct MouseListener { ... }
+/// struct KeyboardListener {}
+/// impl Listener for KeyboardListener {}
+///
+/// #[auto_registry::auto_registry(registry = "listeners")]
+/// #[derive(Default)]
+/// struct MouseListener {}
+/// impl Listener for MouseListener {}
 ///
 /// macro_rules! collect_listeners { // Collects to a Vec<Box<dyn Listener>>
 /// 	( $($construct:expr);+ $(;)? ) => {{ // Macro must accepts `;`-separated arguments
@@ -267,18 +269,26 @@ impl Parse for GenerateRegistryArgs {
 /// {
 /// 	// All listeners will be initialized by calling to `::default()`
 /// 	let listeners = get_listeners!();
+/// 	assert_eq!(listeners.len(), 2);
 /// }
 /// ```
 ///
 /// Example using `mapper`
 /// ```
-/// #[auto_registry::auto_registry(registry = "listeners")]
-/// #[derive(Default)]
-/// struct KeyboardListener { ... }
+/// use std::sync::LazyLock;
+/// use std::sync::Mutex;
+///
+/// pub trait Listener {}
 ///
 /// #[auto_registry::auto_registry(registry = "listeners")]
 /// #[derive(Default)]
-/// struct MouseListener { ... }
+/// struct KeyboardListener {}
+/// impl Listener for KeyboardListener {}
+///
+/// #[auto_registry::auto_registry(registry = "listeners")]
+/// #[derive(Default)]
+/// struct MouseListener {}
+/// impl Listener for MouseListener {}
 ///
 /// // Some global variable that will hold out registered listeners
 /// static LISTENERS: LazyLock<Mutex<Vec<Box<dyn Listener + Send + Sync>>>> = LazyLock::new(|| Mutex::new(Vec::default()));
@@ -317,7 +327,7 @@ pub fn generate_registry(attr: TokenStream, input: TokenStream) -> TokenStream {
 			else
 			{
 				stream.extend(quote::quote_spanned!(proc_macro2::Span::call_site() =>
-					#struct_name::default(),
+					#struct_name::default();
 				));
 			}
 		}
@@ -335,7 +345,7 @@ pub fn generate_registry(attr: TokenStream, input: TokenStream) -> TokenStream {
 	{
 		quote! {
 			macro_rules! #output  {
-				() => { #collector!(#stream); };
+				() => { #collector!(#stream) };
 			}
 			#rest
 		}
