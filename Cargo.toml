@@ -2,6 +2,11 @@
 name = "auto-registry"
 version = "0.0.4"
 edition = "2021"
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/ef3d0c3e/auto-registry"
+description = "Automatic registration using proc macros"
+readme = "README.md"
 
 [lib]
 proc-macro = true

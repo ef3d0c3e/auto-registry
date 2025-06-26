@@ -5,7 +5,6 @@ trace_macros!(true);
 pub trait Listener {
 	fn name(&self) -> &'static str;
 }
-pub trait AA {}
 
 #[auto_registry::auto_registry(registry = "listeners", path = "crate")]
 #[derive(Default)]
