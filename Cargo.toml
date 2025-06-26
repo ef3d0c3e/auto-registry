@@ -1,6 +1,6 @@
 [package]
 name = "auto-registry"
-version = "0.0.4"
+version = "0.0.1"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/ef3d0c3e/auto-registry"
