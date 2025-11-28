@@ -69,7 +69,7 @@ impl Parse for AutoRegistryArgs {
 /// # Attributes
 ///  - registry: (String) Name of the registry to collect the struct into
 ///  - path: (Optional String) The crate path in which the struct is located
-///          If left empty, the path will be try to be automatically-deduced
+///          If left empty, the macro will be try to infer the path.
 ///
 /// # Example
 ///
@@ -101,12 +101,11 @@ pub fn auto_registry(attr: TokenStream, input: TokenStream) -> TokenStream {
 	} else {
 		// Attempt to get the path in a hacky way in case the path wasn't
 		// specified as an attribute to the macro
-		let path = match input
+		let path = match std::path::PathBuf::from(input
 			.ident
 			.span()
 			.unwrap()
-			.source_file()
-			.path()
+			.file())
 			.canonicalize()
 		{
 			Ok(path) => path,
