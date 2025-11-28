@@ -1,6 +1,6 @@
 # auto-registry -- Automatic registration via proc-macros
 
-`auto-registry` is a crate that lets you automatically collect types inside a structure to later call a macro on them.
+`auto-registry` is a crate that lets you automatically collect types to later call a macro on them.
 The main goal of this macro is to allow painless automatic registration by constructing the registered types on demand.
 
 This crate uses the `proc_macros_span` span, thus requiring a nightly compiler.
